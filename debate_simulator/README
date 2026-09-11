@@ -1,0 +1,20 @@
+LLM Debate Simulator
+---------------------
+Simulates a debate between 3 LLM "debaters" powered by local Ollama models.
+By few modifications, this script can be adapted to any number of debaters, turns, or paid models.
+
+- Topic is entered at runtime or hardcoded in the script.
+- Each debater gets exactly 4 turns (12 turns total).
+- Turn order is randomized, with the constraint that no debater goes twice
+  in a row (back-to-back), while still respecting the 4-turn budget per debater.
+- Each turn, a debater receives the FULL transcript so far and must produce
+  a rebuttal to prior discussion + their own argument, self-limited to 250 words
+  (instructed in the prompt; not programmatically truncated).
+- Output is printed to console and saved to debate_transcript.txt.
+
+Requirements:
+	pip install requests
+	Ollama must be running locally (default: http://localhost:11434)
+	Or respective KEYS should be set in the .env file
+
+    

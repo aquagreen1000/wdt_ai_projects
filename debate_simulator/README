@@ -10,11 +10,12 @@ By few modifications, this script can be adapted to any number of debaters, turn
 - Each turn, a debater receives the FULL transcript so far and must produce
   a rebuttal to prior discussion + their own argument, self-limited to 250 words
   (instructed in the prompt; not programmatically truncated).
-- Output is printed to console and saved to debate_transcript.txt.
+- At the end, each debator gives a score to other debators on how they fared and a table is printed
+- Output is printed to console and saved to debate_transcript.md (see example ins this directory)
 
 Requirements:
 	pip install requests
 	Ollama must be running locally (default: http://localhost:11434)
-	Or respective KEYS should be set in the .env file
+	Or respective LLM KEYS should be set in the .env file
 
     

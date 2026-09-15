@@ -1,0 +1,28 @@
+# Shared project environment and generated files
+.env
+.env.*
+!.env.example
+
+# Python and virtual environments
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Generated runtime files
+output/
+*.html
+test_message.txt
+
+# Editor / OS noise
+.vscode/
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/

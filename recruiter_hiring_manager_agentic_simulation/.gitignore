@@ -1,0 +1,30 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local runtime output
+output/
+*.html
+test_message.txt
+
+# IDE/editor files
+.vscode/
+.DS_Store
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/

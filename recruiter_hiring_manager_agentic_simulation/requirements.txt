@@ -1,0 +1,4 @@
+python-dotenv>=1.0.1
+openai>=1.40.0
+openai-agents>=0.0.10
+IPython>=8.25.0

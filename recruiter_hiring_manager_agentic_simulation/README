@@ -1,0 +1,83 @@
+# Recruiter and Hiring Manager Agentic Simulation
+
+This project simulates a hiring workflow with three cooperative agents:
+
+- CV Generator: creates candidate CVs from job titles
+- Hiring Manager: proposes a concise job description phrase
+- Recruiter: reviews the CV bank and recommends the best candidate
+
+The application is organized into Python modules under the `app/` package and can be run as a normal Python script.
+
+## Project structure
+
+- `app/config.py` — environment loading and model configuration
+- `app/agents.py` — agent definitions and default job titles
+- `app/notifications.py` — email and local output handling
+- `app/pipeline.py` — orchestration of the end-to-end workflow
+- `main.py` — simple script entry point
+- `.env.example` — sample environment configuration
+- `requirements.txt` — Python dependencies
+
+## Requirements
+
+Use Python 3.11+.
+
+Install dependencies:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Environment setup
+
+This project loads environment variables from either the project root or the parent directory. Create a real `.env` file from the example if needed:
+
+```bash
+cp .env.example .env
+```
+
+Then fill in your values, especially:
+
+```env
+OPENROUTER_API_KEY=your_key_here
+EMAIL_ADDRESS=your_email@example.com
+EMAIL_SMTP_SERVER=smtp.gmail.com
+EMAIL_APP_PASSWORD=your_app_password_here
+MODEL_NAME=google/gemma-4-26b-a4b-it
+```
+
+## Run the app
+
+```bash
+python3 main.py
+```
+
+or:
+
+```bash
+python3 -m app
+```
+
+The workflow will:
+
+1. generate a CV bank for a set of job titles
+2. ask the hiring manager to propose a job description phrase
+3. ask the recruiter to match the best candidate
+4. save generated HTML output and send a local/email notification
+
+## Outputs
+
+The app writes generated HTML files to the `output/` directory, including:
+
+- `output/simulated_CVs.html`
+- `output/recruiter_recommendations.html`
+
+If email is not configured, messages are written to `test_message.txt` instead.
+
+## Notes
+
+- The project intentionally supports both local testing and real message delivery.
+- If no email settings are present, the app falls back to local file output to avoid failing the workflow.
+- The OpenRouter API key is required for the actual AI-generated run.

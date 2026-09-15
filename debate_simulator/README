@@ -14,8 +14,23 @@ By few modifications, this script can be adapted to any number of debaters, turn
 - Output is printed to console and saved to debate_transcript.md (see example ins this directory)
 
 Requirements:
-	pip install requests
+	pip install openai
 	Ollama must be running locally (default: http://localhost:11434)
 	Or respective LLM KEYS should be set in the .env file
+
+The notebook logic is also available as importable Python modules. From the
+directory containing this folder:
+
+```python
+from debate_simulator import run_debate
+
+run_debate("Which country has had the best performance in all FIFA tournaments?")
+```
+
+Run the interactive entry point with:
+
+```bash
+python3 -m debate_simulator.main
+```
 
     

@@ -18,6 +18,10 @@ warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 # Replace with inputs you want to test with, it will automatically
 # interpolate any tasks and agents information
 
+# This specification is the production brief the agents follow when they generate
+# the trading simulator inside the sandbox. It is intentionally concrete so the
+# design, backend implementation, UI, and tests all line up around the same
+# expected behavior.
 requirements = """
 A simple account management system for a trading simulation platform.
 The system should allow users to create an account, deposit funds, and withdraw funds.

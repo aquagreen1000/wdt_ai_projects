@@ -1,83 +1,74 @@
 # Engineering Team
 
-This project is a CrewAI-based multi-agent engineering workflow that turns a plain software specification into a working implementation in a sandboxed environment. The system acts like a small internal software team: an engineering lead designs the solution, engineers implement the backend and UI, and a QA engineer writes and runs tests until the result passes.
+This repository is a small, end-to-end demonstration of agentic software engineering. Instead of just answering a question, the project uses CrewAI agents to design, implement, test, and refine a trading account simulator inside a disposable sandbox.
 
-The project is designed around a trading simulation/account management system. It does not simply answer questions with an LLM — it orchestrates agents to write real code, execute it, validate it, and keep iterating on the result.
+The result is a working example of a multi-agent development loop: one agent writes the design, another implements the backend, another builds the UI, and a QA agent verifies behavior and fixes issues until the code passes its tests.
 
-## What the project does
+## What this project does
 
-The crew is given a set of high-level requirements for a trading app and then performs the following workflow:
+The crew is given a specification for a trading simulation and account-management system. It then carries out the following workflow:
 
-1. Design phase
-   - The engineering lead reviews the requirements.
-   - It produces a technical design with modules, classes, and method signatures.
-   - The design is saved to the sandbox as a design document.
+1. Design the solution
+   - The engineering lead reads the requirements.
+   - It drafts a technical design that defines the modules, classes, and expected behaviors.
+   - The design is stored in the sandbox as a design document for the rest of the team to use.
 
-2. Backend implementation
-   - The backend engineer writes Python code to satisfy the design.
-   - The implementation includes account management, deposits, withdrawals, stock buys and sells, portfolio calculations, holdings, and transaction history.
-   - The code is written into a sandbox project and tested using the standard library.
+2. Implement the backend
+   - The backend engineer creates Python logic for managing users, cash balances, stock transactions, holdings, and portfolio values.
+   - Supported actions include creating accounts, depositing and withdrawing cash, buying and selling stock, calculating portfolio value, and tracking profit/loss.
+   - The implementation is written into a sandbox project so it behaves like a real code workspace rather than a one-off prompt output.
 
-3. Frontend implementation
-   - The frontend engineer builds a Gradio app that demonstrates the backend behavior.
-   - The UI allows users to create accounts, deposit funds, withdraw funds, buy/sell shares, inspect holdings, and review transactions.
-   - A validation script confirms the frontend module can construct successfully without launching the app.
+3. Build the demo UI
+   - The frontend engineer creates a Gradio interface that lets a user interact with the backend through a browser.
+   - The UI includes tabs for account creation, deposits, withdrawals, buys, sells, holdings, portfolio value, and transaction history.
+   - A validation step ensures the interface can construct successfully without a full interactive launch.
 
-4. Test phase
-   - The test engineer writes unit tests using the built-in unittest framework.
-   - Tests confirm the backend logic works and the frontend object can be initialized.
-   - Any bugs are fixed iteratively until the suite passes.
+4. Validate and iterate
+   - The test engineer writes Python unittest checks for the backend logic and basic UI construction.
+   - The team runs those tests, inspects failures, and corrects the implementation until the suite passes.
 
-## High-level architecture
+This is not just a toy chatbot. It is a real software development pattern in which the agents operate on files, execute code, and improve the result over time.
 
-The project is organized as a CrewAI crew with specialized agents defined in the source package:
+## Project structure
 
-- [src/engineering_team/crew.py](src/engineering_team/crew.py) defines the agent and task orchestration.
-- [src/engineering_team/main.py](src/engineering_team/main.py) is the entry point for running the crew locally.
-- [src/engineering_team/config/agents.yaml](src/engineering_team/config/agents.yaml) defines the engineering_lead, backend_engineer, frontend_engineer, and test_engineer roles.
-- [src/engineering_team/config/tasks.yaml](src/engineering_team/config/tasks.yaml) defines the design, implementation, frontend, and test tasks.
-- [src/engineering_team/tools/sandbox_tools.py](src/engineering_team/tools/sandbox_tools.py) gives the agents tools to list, read, write, and execute files in the sandbox project.
-- [src/engineering_team/patch.py](src/engineering_team/patch.py) includes a CrewAI compatibility patch for MCP tool name handling.
+- [src/engineering_team/crew.py](src/engineering_team/crew.py) defines the CrewAI crew and all four specialized agents.
+- [src/engineering_team/main.py](src/engineering_team/main.py) is the local entry point that resets the sandbox and runs the crew.
+- [src/engineering_team/config/agents.yaml](src/engineering_team/config/agents.yaml) contains the engineering_lead, backend_engineer, frontend_engineer, and test_engineer definitions.
+- [src/engineering_team/config/tasks.yaml](src/engineering_team/config/tasks.yaml) contains the design, code, frontend, and QA tasks.
+- [src/engineering_team/tools/sandbox_tools.py](src/engineering_team/tools/sandbox_tools.py) gives the agents tools to list files, read or write code, and run Python in the sandbox.
+- [sandbox/account_backend.py](sandbox/account_backend.py) holds the actual trading/account logic used by the generated app.
+- [sandbox/app.py](sandbox/app.py) is the Gradio front end that exposes the backend to the user.
+- [sandbox/test_backend.py](sandbox/test_backend.py) contains the unittest suite for the account manager.
+- [src/engineering_team/patch.py](src/engineering_team/patch.py) patches CrewAI compatibility for MCP tool names.
+
+## Functional behavior of the generated app
+
+The code in the sandbox models a trading simulation platform with these capabilities:
+
+- Create a user account with an initial cash deposit
+- Deposit or withdraw cash with validation
+- Buy or sell stock by symbol and quantity
+- Enforce affordability and ownership checks
+- Track holdings for each user
+- Calculate total portfolio value and profit/loss from the initial deposit
+- Keep a transaction log with timestamps and amounts
+- Handle invalid actions such as negative deposits, overdrafts, overbuying, or selling more shares than are owned
+
+The sample stock price lookup uses fixed prices for AAPL, TSLA, and GOOGL and raises an error for unsupported symbols.
 
 ## Sandbox workflow
 
-The app creates and manages a working project under the [sandbox](sandbox) directory. That sandbox acts as a disposable workspace where the agents build code and run tests.
+The repository builds a fresh project under the [sandbox](sandbox) folder each time the crew runs. That sandbox acts as a temporary working directory where the agents can write code and run tests without affecting the rest of the repo.
 
-The sandbox tools support:
+The sandbox tools expose a minimal but useful development loop:
 
-- Listing files in the generated project
-- Reading file contents
-- Writing new implementation files
-- Executing Python scripts in a uv-managed environment
-- Running tests in a containerized or local execution environment
+- list files in the generated project
+- read a file's content
+- write implementation code
+- execute a Python file in a uv-based environment
+- inspect stdout and stderr from test or validation runs
 
-This lets the AI team work like a software development pipeline instead of a single prompt-only assistant.
-
-## Functional scope
-
-The generated system is meant to model a trading simulation platform with these core behaviors:
-
-- Create user accounts
-- Deposit funds
-- Withdraw funds while enforcing balance rules
-- Record buy and sell actions with quantity data
-- Calculate portfolio value
-- Track profit and loss from the initial deposit
-- Report current holdings
-- Show transaction history
-- Prevent invalid operations such as overdraft withdrawals, unaffordable purchases, and selling stock the user does not own
-
-The requirements also specify that every function gets unit tests using Python's unittest module and that the app can be demonstrated through a Gradio interface.
-
-## Project entry points
-
-The package exposes several local execution utilities from [pyproject.toml](pyproject.toml):
-
-- engineering_team / run_crew: start the crew
-- train: train the crew over iterations
-- replay: replay a task from an earlier run
-- test: run crew evaluation
-- run_with_trigger: start the workflow from a JSON trigger payload
+This is the key idea of the project: AI agents are not only generating ideas, they are operating on files and iterating on working software in a local workspace.
 
 ## How to run it
 
@@ -88,13 +79,23 @@ uv sync
 uv run engineering_team
 ```
 
-Or use the script entry points directly:
+You can also invoke the entry points declared in [pyproject.toml](pyproject.toml):
 
 ```bash
 uv run run_crew
 ```
 
-This initializes the crew and kicks off the full engineering workflow.
+The `run` function resets the sandbox, starts the CrewAI workflow, and executes the full design/build/test loop.
+
+## Project commands
+
+The package exposes a few useful local commands:
+
+- `engineering_team` / `run_crew`: run the full crew
+- `train`: train the crew with additional iterations
+- `replay`: replay a previously executed task
+- `test`: run the crew evaluation flow
+- `run_with_trigger`: execute the crew from a JSON trigger payload
 
 ## Dependencies
 
@@ -102,9 +103,11 @@ This project depends on:
 
 - Python 3.10 to 3.13
 - CrewAI
-- Gradio in the sandbox for the frontend work
-- Docker/UV-based execution for sandbox code runs
+- Gradio for the demo UI in the sandbox
+- Docker and uv for running code in the sandbox environment
 
 ## Notes
 
-The important idea behind this repository is not a finished app by itself, but an autonomous software generation loop: the AI agents collaborate to design, implement, validate, and refine an application in a real sandboxed workspace. The result is a practical example of an LLM-based engineering team being used to build and test a small software system end-to-end.
+This repository is best understood as a working example of an autonomous engineering team, not as a standalone product app. The important artifact is the system that coordinates agents to create, validate, and refine code in a real sandboxed workflow.
+
+In other words, the app is the demonstration target, but the bigger project goal is to show how AI agents can collaborate on software development tasks end-to-end.

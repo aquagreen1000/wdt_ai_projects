@@ -12,7 +12,12 @@ from typing import Dict
 
 @CrewBase
 class EngineeringTeam():
-    """EngineeringTeam crew"""
+    """Crew that orchestrates the design, implementation, UI, and QA workflow.
+
+    The goal is not just to generate text: this crew writes code into a sandbox,
+    executes it, and iterates on failures until the result satisfies the product
+    requirements.
+    """
 
     agents: list[BaseAgent]
     tasks: list[Task]

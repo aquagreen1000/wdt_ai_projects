@@ -1,7 +1,9 @@
 import gradio as gr
 from account_backend import AccountManager
 
-# Initialize AccountManager instance
+# The UI is a thin demo layer over the real account logic. The backend handles
+# validation, balances, holdings, and transaction history; Gradio simply exposes
+# those operations as browser-friendly forms and tables.
 manager = AccountManager()
 
 # Define the color palette as hex strings
